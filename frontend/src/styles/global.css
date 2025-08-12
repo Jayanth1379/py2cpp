@@ -1,0 +1,15 @@
+:root { --bg:#0f1220; --panel:#171a2b; --accent:#5b8cff; --muted:#aab; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:#eee; font:14px/1.5 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+.app { display:flex; height:100vh; gap:12px; padding:12px; }
+.pane { flex:1; background:var(--panel); border:1px solid #22283e; border-radius:8px; display:flex; flex-direction:column; }
+.pane h3 { margin:0; padding:8px 12px; border-bottom:1px solid #22283e; color:#cfd6ff; }
+textarea, pre, input, button { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+.editor { flex:1; width:100%; background:#0e1120; color:#e8e8e8; border:none; padding:12px; resize:none; outline:none; }
+.controls { display:flex; gap:8px; padding:10px; border-top:1px solid #22283e; }
+button { background:var(--accent); color:white; border:none; border-radius:6px; padding:8px 12px; cursor:pointer; }
+button.secondary { background:#2a2f4a; }
+.io { display:flex; gap:8px; padding:8px; }
+.io textarea { height:120px; }
+pre.output { margin:0; padding:12px; white-space:pre-wrap; overflow:auto; flex:1 }
+.status { color:var(--muted); padding:8px 12px; }
