@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 const INDENT = "    ";
+const INDENT_LEN = INDENT.length;
 
 export default function Editor({ value, onChange }) {
   const [val, setVal] = useState(value || "");
@@ -27,46 +28,62 @@ export default function Editor({ value, onChange }) {
 
     if (e.key === "Tab") {
       e.preventDefault();
-
       if (start === end) {
         const next = val.slice(0, start) + INDENT + val.slice(end);
-        applyEdit(next, start + INDENT.length, start + INDENT.length);
+        applyEdit(next, start + INDENT_LEN, start + INDENT_LEN);
         return;
       }
-
       const lineStart = val.lastIndexOf("\n", start - 1) + 1;
       let lineEnd = val.indexOf("\n", end);
       if (lineEnd === -1) lineEnd = val.length;
 
       const block = val.slice(lineStart, lineEnd);
-      let edited, newSelStart, newSelEnd;
-
-      if (e.shiftKey) {
-        edited = block.replace(/^ {1,4}/gm, "");
-      } else {
-        edited = block.replace(/^/gm, INDENT);
-      }
+      const edited = e.shiftKey
+        ? block.replace(/^ {1,4}/gm, "")
+        : block.replace(/^/gm, INDENT);
 
       const next = val.slice(0, lineStart) + edited + val.slice(lineEnd);
-      newSelStart = lineStart;
-      newSelEnd = lineStart + edited.length;
-      applyEdit(next, newSelStart, newSelEnd);
+      applyEdit(next, lineStart, lineStart + edited.length);
       return;
     }
 
     if (e.key === "Enter") {
       e.preventDefault();
-
       const lineStart = val.lastIndexOf("\n", start - 1) + 1;
       const currentLine = val.slice(lineStart, start);
       const baseIndent = (currentLine.match(/^[ \t]*/)?.[0]) || "";
       const extra = /:\s*$/.test(currentLine) ? INDENT : "";
       const insert = "\n" + baseIndent + extra;
-
       const next = val.slice(0, start) + insert + val.slice(end);
       const caret = start + insert.length;
       applyEdit(next, caret, caret);
       return;
+    }
+
+    if (e.key === "Backspace" && start === end) {
+      const lineStart = val.lastIndexOf("\n", start - 1) + 1;
+      const before = val.slice(lineStart, start);
+
+      if (/^[ \t]*$/.test(before) && before.length > 0) {
+        e.preventDefault();
+
+        if (before.endsWith("\t")) {
+          const next = val.slice(0, start - 1) + val.slice(end);
+          applyEdit(next, start - 1, start - 1);
+          return;
+        }
+
+        const trailingSpaces = (before.match(/ *$/)?.[0].length) || 0;
+        if (trailingSpaces > 0) {
+          const del = (trailingSpaces % INDENT_LEN) || INDENT_LEN;
+          const newStart = start - del;
+          const next =
+            val.slice(0, newStart) +
+            val.slice(start);
+          applyEdit(next, newStart, newStart);
+          return;
+        }
+      }
     }
   };
 
