@@ -4,7 +4,7 @@ import OutputPane from "./components/OutputPane.jsx";
 import TestRunner from "./components/TestRunner.jsx";
 import "./styles/global.css";
 
-const SAMPLE = `# Example
+const SAMPLE = `
 n = int(input())
 curr = 0
 ans = 0
