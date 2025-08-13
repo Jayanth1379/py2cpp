@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import Editor from "./components/Editor.jsx";
-import OutputPane from "./components/OutputPane.jsx";
 import TestRunner from "./components/TestRunner.jsx";
 import "./styles/global.css";
 
@@ -26,18 +25,21 @@ export default function App() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ py })
-    }).then(r => r.json());
+    }).then((r) => r.json());
     setCpp(res.cpp || "");
   };
 
   useEffect(() => {
     const onKey = (e) => {
+      const active = document.activeElement;
+      const inEditor = active && active.classList && active.classList.contains("code-input");
+
       if (e.metaKey && e.key === "Enter") {
         e.preventDefault();
         runnerRef.current?.runBoth?.();
         return;
       }
-      if (e.metaKey && (e.key === "'" || e.key === '"')) {
+      if (!inEditor && e.metaKey && (e.key === "'" || e.key === '"')) {
         e.preventDefault();
         transpile();
         return;
@@ -53,11 +55,20 @@ export default function App() {
         <h3>Python</h3>
         <Editor value={py} onChange={setPy} lang="py" />
         <div className="controls">
-          <button onClick={transpile} title={`Cmd+' or Cmd+"`}>Transpile → C++ (AI)</button>
-          <span className="status" style={{ marginLeft: 8 }}>Shortcut: Cmd+' / Cmd+" • Cmd+Enter</span>
+          <button onClick={transpile} title={`Cmd+' or Cmd+" (when focus not in editor)`}>
+            Transpile → C++ (AI)
+          </button>
+          <span className="status" style={{ marginLeft: 8 }}>
+            Shortcuts: Cmd+' / Cmd+" (global), Cmd+Enter (run), Cmd+/ (toggle comments)
+          </span>
         </div>
       </div>
-      <OutputPane title="Generated C++" text={cpp} />
+
+      <div className="pane">
+        <h3>Generated C++ (editable)</h3>
+        <Editor value={cpp} onChange={setCpp} lang="cpp" />
+      </div>
+
       <TestRunner ref={runnerRef} python={py} cpp={cpp} />
     </div>
   );
