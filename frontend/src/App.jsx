@@ -32,13 +32,16 @@ export default function App() {
   useEffect(() => {
     const onKey = (e) => {
       const active = document.activeElement;
-      const inEditor = active && active.classList && active.classList.contains("code-input");
+      const inEditor =
+        active && active.classList && (active.classList.contains("code-input") || active.classList.contains("editor"));
 
+      // Cmd+Enter → run
       if (e.metaKey && e.key === "Enter") {
         e.preventDefault();
         runnerRef.current?.runBoth?.();
         return;
       }
+      // Cmd+' or Cmd+" → transpile (only when NOT typing inside the editor)
       if (!inEditor && e.metaKey && (e.key === "'" || e.key === '"')) {
         e.preventDefault();
         transpile();

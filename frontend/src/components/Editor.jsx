@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 
 const INDENT = "    ";
 const INDENT_LEN = INDENT.length;
-
 const OPENERS = { "(": ")", "[": "]", "{": "}", '"': '"', "'": "'" };
 const CLOSERS = new Set(Object.values(OPENERS));
 
@@ -32,16 +31,9 @@ export default function Editor({ value, onChange, lang = "py" }) {
 
     const block = val.slice(lineStart, lineEnd);
     const lines = block.split("\n");
-    const allCommented = lines.every(l => /^\s*(#|\/\/)/.test(l));
-
+    const allCommented = lines.every((l) => /^\s*(#|\/\/)/.test(l));
     const edited = lines
-      .map(l => {
-        if (allCommented) {
-          return l.replace(/^(\s*)(#|\/\/)\s?/, "$1");
-        } else {
-          return l.replace(/^(\s*)/, `$1${mark} `);
-        }
-      })
+      .map((l) => (allCommented ? l.replace(/^(\s*)(#|\/\/)\s?/, "$1") : l.replace(/^(\s*)/, `$1${mark} `)))
       .join("\n");
 
     const next = val.slice(0, lineStart) + edited + val.slice(lineEnd);
@@ -53,35 +45,31 @@ export default function Editor({ value, onChange, lang = "py" }) {
     const start = el.selectionStart;
     const end = el.selectionEnd;
 
+    // toggle comments
     if (e.metaKey && e.key === "/") {
       e.preventDefault();
       toggleCommentBlock(start, end);
       return;
     }
 
+    // auto-pairs
     if (OPENERS[e.key]) {
       e.preventDefault();
-      const open = e.key;
-      const close = OPENERS[open];
+      const open = e.key, close = OPENERS[open];
       const selected = val.slice(start, end);
-      const insert = selected
-        ? open + selected + close
-        : open + close;
-      const caret = selected ? start + 1 + selected.length : start + 1;
+      const insert = selected ? open + selected + close : open + close;
+      const caret = start + 1 + (selected ? selected.length : 0);
       const next = val.slice(0, start) + insert + val.slice(end);
       applyEdit(next, caret, caret);
       return;
     }
-
     if (CLOSERS.has(e.key) && start === end && val.slice(start, start + 1) === e.key) {
       e.preventDefault();
       applyEdit(val, start + 1, start + 1);
       return;
     }
-
     if (e.key === "Backspace" && start === end && start > 0) {
-      const prev = val[start - 1];
-      const nextChar = val[start];
+      const prev = val[start - 1], nextChar = val[start];
       if (OPENERS[prev] && OPENERS[prev] === nextChar) {
         e.preventDefault();
         const next = val.slice(0, start - 1) + val.slice(start + 1);
@@ -90,6 +78,7 @@ export default function Editor({ value, onChange, lang = "py" }) {
       }
     }
 
+    // indent/dedent
     if (e.key === "Tab") {
       e.preventDefault();
       if (start === end) {
@@ -100,17 +89,14 @@ export default function Editor({ value, onChange, lang = "py" }) {
       const lineStart = val.lastIndexOf("\n", start - 1) + 1;
       let lineEnd = val.indexOf("\n", end);
       if (lineEnd === -1) lineEnd = val.length;
-
       const block = val.slice(lineStart, lineEnd);
-      const edited = e.shiftKey
-        ? block.replace(/^ {1,4}/gm, "")
-        : block.replace(/^/gm, INDENT);
-
+      const edited = e.shiftKey ? block.replace(/^ {1,4}/gm, "") : block.replace(/^/gm, INDENT);
       const next = val.slice(0, lineStart) + edited + val.slice(lineEnd);
       applyEdit(next, lineStart, lineStart + edited.length);
       return;
     }
 
+    // smart newline (Python)
     if (e.key === "Enter") {
       e.preventDefault();
       const lineStart = val.lastIndexOf("\n", start - 1) + 1;
@@ -124,6 +110,7 @@ export default function Editor({ value, onChange, lang = "py" }) {
       return;
     }
 
+    // backspace eat spaces to previous indent stop
     if (e.key === "Backspace" && start === end) {
       const lineStart = val.lastIndexOf("\n", start - 1) + 1;
       const before = val.slice(lineStart, start);
@@ -149,7 +136,7 @@ export default function Editor({ value, onChange, lang = "py" }) {
   return (
     <textarea
       ref={taRef}
-      className="editor"
+      className="editor code-input"
       value={val}
       onChange={(e) => {
         setVal(e.target.value);

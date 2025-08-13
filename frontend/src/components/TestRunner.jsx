@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 
-function TestRunnerImpl({ python, cpp }) {
+const TestRunner = forwardRef(function TestRunner({ python, cpp }, ref) {
   const [stdin, setStdin] = useState("");
   const [pyOut, setPyOut] = useState("");
   const [cppOut, setCppOut] = useState("");
@@ -15,25 +15,22 @@ function TestRunnerImpl({ python, cpp }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: python, stdin })
-      }).then(r => r.json());
+      }).then((r) => r.json());
 
       const cc = await fetch(`${API}/run/cpp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: cpp, stdin })
-      }).then(r => r.json());
+      }).then((r) => r.json());
 
-      setPyOut((py.stdout || "") + (py.stderr ? ("\n[stderr]\n" + py.stderr) : ""));
-      setCppOut((cc.stdout || "") + (cc.stderr ? ("\n[stderr]\n" + cc.stderr) : ""));
+      setPyOut((py.stdout || "") + (py.stderr ? "\n[stderr]\n" + py.stderr : ""));
+      setCppOut((cc.stdout || "") + (cc.stderr ? "\n[stderr]\n" + cc.stderr : ""));
     } finally {
       setStatus("");
     }
   };
 
-  useImperativeHandle(
-    arguments[1],
-    () => ({ runBoth })
-  );
+  useImperativeHandle(ref, () => ({ runBoth }));
 
   return (
     <div className="pane">
@@ -62,7 +59,6 @@ function TestRunnerImpl({ python, cpp }) {
       </div>
     </div>
   );
-}
+});
 
-const TestRunner = forwardRef(TestRunnerImpl);
 export default TestRunner;
